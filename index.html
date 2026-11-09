@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sirimak's Web Apps</title>
+<meta name="description" content="All of Sirimak-W's web applications in one place — Chinese learning and everyday tools.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@500;700&family=Noto+Sans+Thai:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --surface: #ffffff;
+    --surface-2: #f0efeb;
+    --text: #1b1b1f;
+    --muted: #63636d;
+    --border: #e4e3de;
+    --accent: #3b5bdb;
+    --accent-soft: #e7ecff;
+    --sky: #0ea5e9;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 20px rgba(0,0,0,.05);
+    --c-chinese: #d6336c;  --c-chinese-soft: #fde8ef;
+    --c-running: #0c8f6a;  --c-running-soft: #e0f5ee;
+    --c-tools:   #e8590c;  --c-tools-soft:   #fff0e6;
+    --c-other:   #6741d9;  --c-other-soft:   #efe9ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111114; --surface: #1a1a1f; --surface-2: #232329; --text: #ececf1; --muted: #9a9aa6;
+      --border: #2c2c33; --accent: #8ea4ff; --accent-soft: #232a45; --sky: #38bdf8; --shadow: 0 1px 2px rgba(0,0,0,.3);
+      --c-chinese: #f783ac; --c-chinese-soft: #3a1f2a;
+      --c-running: #4fd1a5; --c-running-soft: #16322a;
+      --c-tools:   #ffa36b; --c-tools-soft:   #3a2618;
+      --c-other:   #b197fc; --c-other-soft:   #2a2340;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111114; --surface: #1a1a1f; --surface-2: #232329; --text: #ececf1; --muted: #9a9aa6;
+    --border: #2c2c33; --accent: #8ea4ff; --accent-soft: #232a45; --sky: #38bdf8; --shadow: 0 1px 2px rgba(0,0,0,.3);
+    --c-chinese: #f783ac; --c-chinese-soft: #3a1f2a;
+    --c-running: #4fd1a5; --c-running-soft: #16322a;
+    --c-tools:   #ffa36b; --c-tools-soft:   #3a2618;
+    --c-other:   #b197fc; --c-other-soft:   #2a2340;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: Inter, "Noto Sans Thai", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+    line-height: 1.5; -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+  /* Header */
+  header.top { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; }
+  .brand img { width: 32px; height: 32px; border-radius: 50%; background: var(--surface-2); }
+  .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text); font: inherit; font-size: 14px; cursor: pointer; text-decoration: none;
+  }
+  .icon-btn:hover { border-color: var(--muted); }
+  .top-actions { display: flex; gap: 8px; }
+
+  /* Hero */
+  .hero { padding: 40px 0 28px; }
+  .hero h1 { font-size: clamp(32px, 6vw, 56px); line-height: 1.05; letter-spacing: -0.03em; margin: 0 0 14px; font-weight: 800; }
+  .hero h1 span { color: var(--sky); }
+  .hero p { font-size: 18px; color: var(--muted); max-width: 620px; margin: 0; }
+  .stats { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 28px; }
+  .stat b { display: block; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+  .stat small { color: var(--muted); font-size: 13px; }
+
+  /* Controls */
+  .controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 16px 0; position: sticky; top: 0; background: var(--bg); z-index: 5; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    padding: 7px 14px; border-radius: 999px; font: inherit; font-size: 14px; cursor: pointer;
+  }
+  .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .chip .n { opacity: .6; margin-left: 4px; font-size: 12px; }
+  .search {
+    flex: 1 1 220px; max-width: 320px; height: 38px; padding: 0 14px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; font-size: 14px;
+  }
+  .search:focus, .chip:focus-visible, .icon-btn:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; padding: 8px 0 48px; }
+  .card {
+    --c: var(--c-other); --cs: var(--c-other-soft);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; overflow: hidden; transition: transform .15s ease, border-color .15s ease;
+  }
+  .card:hover { transform: translateY(-2px); border-color: var(--c); }
+  .card[data-cat="chinese"] { --c: var(--c-chinese); --cs: var(--c-chinese-soft); }
+  .card[data-cat="running"] { --c: var(--c-running); --cs: var(--c-running-soft); }
+  .card[data-cat="tools"]   { --c: var(--c-tools);   --cs: var(--c-tools-soft); }
+  .card-head { background: var(--cs); padding: 22px 22px 18px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .glyph {
+    width: 56px; height: 56px; border-radius: 14px; background: var(--surface); color: var(--c);
+    display: grid; place-items: center; font-size: 26px; font-weight: 700; flex: none;
+    font-family: "Noto Sans SC", "Noto Sans Thai", Inter, sans-serif;
+  }
+  .tag { font-size: 12px; font-weight: 600; color: var(--c); background: var(--surface); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+  .card-body { padding: 18px 22px 8px; flex: 1; }
+  .card h3 { margin: 0 0 4px; font-size: 19px; letter-spacing: -0.01em; }
+  .card .sub { margin: 0 0 10px; font-size: 13px; color: var(--muted); }
+  .card .desc { margin: 0; font-size: 14.5px; color: var(--text); opacity: .85; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 14px; font-size: 12.5px; color: var(--muted); }
+  .meta .lang::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c); margin-right: 6px; vertical-align: 1px; }
+  .card-foot { display: flex; gap: 8px; padding: 14px 22px 20px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 38px; padding: 0 14px;
+    border-radius: 10px; font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid var(--border);
+  }
+  .btn.primary { background: var(--c); color: #fff; border-color: var(--c); flex: 1; }
+  :root[data-theme="dark"] .btn.primary { color: #111; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #111; } }
+  .btn.ghost { background: transparent; color: var(--text); }
+  .btn.ghost:hover { border-color: var(--muted); }
+  .btn svg { width: 16px; height: 16px; }
+  .new-badge { font-size: 11px; font-weight: 700; color: var(--c); margin-left: 6px; vertical-align: 2px; }
+
+  .empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 48px 0; }
+
+  footer { border-top: 1px solid var(--border); padding: 24px 0 40px; color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; }
+
+  @media (max-width: 520px) {
+    .hero { padding-top: 20px; }
+    .hero p { font-size: 16px; }
+    .grid { grid-template-columns: 1fr; }
+    .search { max-width: none; }
+    .brand span { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .card { transition: none; } .card:hover { transform: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="https://github.com/Sirimak-W" target="_blank" rel="noopener">
+      <img src="https://github.com/Sirimak-W.png?size=64" alt="" width="32" height="32">
+      <span>Sirimak-W</span>
+    </a>
+    <div class="top-actions">
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle dark mode">◐ Theme</button>
+      <a class="icon-btn" href="https://github.com/Sirimak-W" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>All my web apps,<br><span>in one place.</span></h1>
+    <p>Small, fast, mostly single-file apps for learning Chinese and getting everyday things done. Every one is free and runs right in your browser.</p>
+    <div class="stats">
+      <div class="stat"><b id="statApps">4</b><small>live apps</small></div>
+      <div class="stat"><b id="statCats">2</b><small>categories</small></div>
+      <div class="stat"><b id="statUpdated">—</b><small>last update</small></div>
+    </div>
+  </section>
+
+  <div class="controls">
+    <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+    <input class="search" id="search" type="search" placeholder="Search apps…" aria-label="Search apps">
+  </div>
+
+  <main class="grid" id="grid" aria-live="polite"></main>
+
+  <footer>
+    <span>© <span id="year"></span> Sirimak-W · Hosted on GitHub Pages</span>
+    <span id="syncNote">Showing saved app list</span>
+  </footer>
+</div>
+
+<script>
+const USER = "Sirimak-W";
+
+// Repos never shown, even if the GitHub sync finds them (personal data, old or test apps).
+const EXCLUDE = ["garmin-runs", "web-app-trilingual", "web-app-fitspace", "project-all-web-app"];
+
+const CATEGORIES = {
+  all:     "All",
+  chinese: "Chinese learning",
+  tools:   "Everyday tools",
+  other:   "Other",
+};
+
+// Curated list. Dates are refreshed from the GitHub API when it is reachable.
+const APPS = [
+  {
+    repo: "chinese-app", cat: "chinese", glyph: "学",
+    name: "学 Mandarin — Daily Chinese", sub: "Spaced-repetition Mandarin trainer",
+    desc: "Learn Mandarin a little every day with spaced repetition. Your progress is saved in your browser, with no account needed.",
+    url: "https://sirimak-w.github.io/chinese-app/", lang: "JavaScript", updated: "2026-07-10",
+  },
+  {
+    repo: "hsk-vocab", cat: "chinese", glyph: "词",
+    name: "HSK 3 Decks", sub: "HSK 3.0 vocabulary flashcards",
+    desc: "Flashcards for the HSK 3.0 cumulative vocabulary, levels 1–3, split into fixed 20-word decks.",
+    url: "https://sirimak-w.github.io/hsk-vocab/", lang: "HTML", updated: "2026-09-30",
+  },
+  {
+    repo: "web-app-writing-cn", cat: "chinese", glyph: "笔",
+    name: "笔顺 · Stroke Order Practice", sub: "Animated Chinese stroke order",
+    desc: "Type any Chinese word or sentence to see animated stroke order in a 米字格 grid, with pinyin and English meanings. Works offline.",
+    url: "https://sirimak-w.github.io/web-app-writing-cn/", lang: "HTML", updated: "2026-07-14",
+  },
+  {
+    repo: "bill-split", cat: "tools", glyph: "฿",
+    name: "หารค่าข้าว · Bill Split", sub: "Split restaurant bills with friends",
+    desc: "Pick who ate what and it works out Service charge and VAT for each person, then makes a PromptPay QR code for each friend.",
+    url: "https://sirimak-w.github.io/bill-split/", lang: "HTML", updated: "2026-11-05",
+  },
+];
+
+const ICON_OPEN = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 3H3v10h10v-3M9 2h5v5M14 2 7 9"/></svg>';
+const ICON_CODE = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4 1 8l4 4M11 4l4 4-4 4"/></svg>';
+
+const state = { cat: "all", q: "" };
+const grid = document.getElementById("grid");
+const chips = document.getElementById("chips");
+const search = document.getElementById("search");
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const fmtDate = d => new Date(d + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+const daysAgo = d => (Date.now() - new Date(d + "T00:00:00")) / 864e5;
+
+function renderChips() {
+  const counts = APPS.reduce((m, a) => (m[a.cat] = (m[a.cat] || 0) + 1, m), {});
+  const keys = ["all", ...Object.keys(CATEGORIES).filter(k => k !== "all" && counts[k])];
+  chips.innerHTML = keys.map(k =>
+    `<button class="chip" type="button" data-cat="${k}" aria-pressed="${state.cat === k}">${CATEGORIES[k]}<span class="n">${k === "all" ? APPS.length : counts[k]}</span></button>`
+  ).join("");
+}
+
+function renderGrid() {
+  const q = state.q.trim().toLowerCase();
+  const list = APPS
+    .filter(a => state.cat === "all" || a.cat === state.cat)
+    .filter(a => !q || [a.name, a.sub, a.desc, a.repo, a.lang, CATEGORIES[a.cat]].join(" ").toLowerCase().includes(q))
+    .sort((a, b) => b.updated.localeCompare(a.updated));
+
+  if (!list.length) { grid.innerHTML = `<p class="empty">No apps match “${esc(state.q)}”.</p>`; return; }
+
+  grid.innerHTML = list.map(a => `
+    <article class="card" data-cat="${a.cat}">
+      <div class="card-head">
+        <div class="glyph" aria-hidden="true">${esc(a.glyph)}</div>
+        <span class="tag">${CATEGORIES[a.cat]}</span>
+      </div>
+      <div class="card-body">
+        <h3>${esc(a.name)}${daysAgo(a.updated) < 14 ? '<span class="new-badge">UPDATED</span>' : ""}</h3>
+        <p class="sub">${esc(a.sub)}</p>
+        <p class="desc">${esc(a.desc)}</p>
+        <div class="meta">
+          <span class="lang">${esc(a.lang)}</span>
+          <span>Updated ${fmtDate(a.updated)}</span>
+        </div>
+      </div>
+      <div class="card-foot">
+        <a class="btn primary" href="${esc(a.url)}" target="_blank" rel="noopener">${ICON_OPEN} Open app</a>
+        <a class="btn ghost" href="https://github.com/${USER}/${esc(a.repo)}" target="_blank" rel="noopener" aria-label="Source code for ${esc(a.name)}">${ICON_CODE} Code</a>
+      </div>
+    </article>`).join("");
+}
+
+function renderStats() {
+  document.getElementById("statApps").textContent = APPS.length;
+  document.getElementById("statCats").textContent = new Set(APPS.map(a => a.cat)).size;
+  const latest = APPS.map(a => a.updated).sort().pop();
+  document.getElementById("statUpdated").textContent = latest ? fmtDate(latest).replace(/ \d{4}$/, "") : "—";
+}
+
+function renderAll() { renderChips(); renderGrid(); renderStats(); }
+
+chips.addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  state.cat = b.dataset.cat; renderChips(); renderGrid();
+});
+search.addEventListener("input", e => { state.q = e.target.value; renderGrid(); });
+
+// Theme toggle (remembered per browser)
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch (_) {}
+document.getElementById("themeBtn").addEventListener("click", () => {
+  const isDark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = isDark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch (_) {}
+});
+
+document.getElementById("year").textContent = new Date().getFullYear();
+renderAll();
+
+// Live sync: refresh update dates, and add any new public repo that has a
+// GitHub Pages site or a homepage URL but is not in the list yet.
+(async function sync() {
+  try {
+    const res = await fetch(`https://api.github.com/users/${USER}/repos?per_page=100&sort=pushed`);
+    if (!res.ok) throw new Error(res.status);
+    const repos = await res.json();
+    const known = new Map(APPS.map(a => [a.repo.toLowerCase(), a]));
+    let added = 0;
+    for (const r of repos) {
+      const app = known.get(r.name.toLowerCase());
+      if (app) { app.updated = r.pushed_at.slice(0, 10); continue; }
+      if (EXCLUDE.includes(r.name.toLowerCase()) || r.fork || r.archived || r.name.toLowerCase() === USER.toLowerCase()) continue;
+      const url = r.homepage || (r.has_pages ? `https://${USER.toLowerCase()}.github.io/${r.name}/` : "");
+      if (!url) continue;
+      APPS.push({
+        repo: r.name, cat: "other", glyph: r.name[0].toUpperCase(),
+        name: r.name.replace(/[-_]/g, " ").replace(/\b\w/g, c => c.toUpperCase()),
+        sub: "New on GitHub", desc: r.description || "A web app from my GitHub.",
+        url, lang: r.language || "Web", updated: r.pushed_at.slice(0, 10),
+      });
+      added++;
+    }
+    renderAll();
+    document.getElementById("syncNote").textContent = added
+      ? `Synced with GitHub · ${added} new app${added > 1 ? "s" : ""} found`
+      : "Synced with GitHub just now";
+  } catch (_) {
+    document.getElementById("syncNote").textContent = "Showing saved app list (GitHub not reachable)";
+  }
+})();
+</script>
+</body>
+</html>
